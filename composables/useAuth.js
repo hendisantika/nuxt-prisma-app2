@@ -10,7 +10,7 @@ import {
 const useAuth = () => {
     let userInfo = useState('stateUserInfo', () => null);
 
-    // -- 新規会員データの箱 -------------- //
+    // -- New member data box -------------- //
     let tempUserData = {
         uid: '',
         email: '',
@@ -32,7 +32,7 @@ const useAuth = () => {
             .then((userCredential) => {
                 const token = userCredential.user.accessToken;
                 const user = userCredential.user;
-                console.log('登録', user.uid);
+                console.log('registration', user.uid);
 
                 tempUserData.token = token;
                 tempUserData.uid = user.uid;
@@ -42,9 +42,9 @@ const useAuth = () => {
                 console.log(error);
                 console.log('firebaseError: ', error.code);
                 if (error.code === 'auth/email-already-in-use') {
-                    console.log('このメールアドレスは使用されています');
+                    console.log('This email address is in use');
                 } else {
-                    console.log('エラー:', error.code);
+                    console.log('Error:', error.code);
                 }
                 // switch (error.code) {
                 //   case 'auth/cancelled-popup-request':
@@ -93,7 +93,7 @@ const useAuth = () => {
         const data = await $fetch('/api/auth', {
             method: 'post',
             body: {mode: values.mode, data: tempUserData},
-        }); // そのままリターンしないとエラー
+        }); // Error if you do not return as is
         userInfo.value = {...data};
         console.log('userInfo.value', userInfo.value);
     };
@@ -115,9 +115,9 @@ const useAuth = () => {
                 console.log(error);
                 console.log('firebaseError: ', error.code);
                 if (error.code === 'auth/email-already-in-use') {
-                    console.log('このメールアドレスは使用されています');
+                    console.log('This email address is in use');
                 } else {
-                    console.log('エラー:', error.code);
+                    console.log('Error:', error.code);
                 }
             });
         if (tempUser) {
@@ -145,7 +145,7 @@ const useAuth = () => {
                     const credential = GoogleAuthProvider.credentialFromResult(result);
                     token = credential.accessToken;
                     console.log(result.user);
-                    console.log(`登録orログインユーザー id: ${token} uid: ${result.user.uid}`);
+                    console.log(`Registered or logged in user id: ${token} uid: ${result.user.uid}`);
 
                     tempUserData.token = token;
                     tempUserData.uid = result.user.uid;
@@ -157,7 +157,7 @@ const useAuth = () => {
                 });
             const data = await $fetch('/api/auth', {method: 'post', body: tempUserData});
             userInfo.value = {...data};
-            userInfo.value.id = data.data.id; // index付与
+            userInfo.value.id = data.data.id; // Add index
 
             console.log('userInfo.value', userInfo.value);
         } catch (error) {
